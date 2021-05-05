@@ -50,8 +50,8 @@ const mongoDatabase = process.env.MONGO_DATABASE; //la base de datos
 //uri de conexion
 var uri = "mongodb://" + mongoUserName + ":" + mongoPassword + "@" + mongoHost + ":" + mongoPort + "/" + mongoDatabase;
 
-const options ={
-    useNewUrlParse: true,
+const options = {
+    useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
     authSource:"admin"
@@ -71,6 +71,7 @@ mongoose.connect(uri, options).then(()=>{
     console.log("  x falla al conectar al Mongo".red);
     console.log("**********************************".red);
     console.log("\n");
+    console.log(err);
 });
 
 

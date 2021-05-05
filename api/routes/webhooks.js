@@ -98,7 +98,7 @@ try {
             variable:variable,
             value:data.payload.value,
             time:Date.now()
-        })
+        });
         console.log ("Dato creado");
     }
 
@@ -137,13 +137,11 @@ router.post("/alarm-webhook", async (req, res) => {
                 saveNotifToMongo(incomingAlarm);
                 sendMqttNotif(incomingAlarm);
             }
-          }  
-        
+          }        
     } catch (error) {
         console.log(error);
         res.sendStatus(200);
     }
-
 });
 
 //get notifications
@@ -176,12 +174,13 @@ router.put("/notifications", checkAuth, async(req,res)=>{
     try {
         const userId = req.userData._id;
 
-        const notificationId = req = req.body.notifId;
+        const notificationId = req.body.notifId;
 
         await Notification.updateOne({userId: userId, _id: notificationId},{readed: true});
         const toSend = {
             status: "success",
         };
+
         res.json(toSend);
     } catch (error) {
         console.log("ERROR EN ACTUALIZAR EL ESTADO DE LA NOTIFICACION");
@@ -194,8 +193,7 @@ router.put("/notifications", checkAuth, async(req,res)=>{
 
         return res.status(500).json(toSend);
     }
-})
-
+});
 /* 
 ______ _   _ _   _ _____ _____ _____ _____ _   _  _____ 
 |  ___| | | | \ | /  __ \_   _|_   _|  _  | \ | |/  ___|
@@ -306,7 +304,6 @@ function sendMqttNotif(notif) {
     const topic = notif.userId + '/dummy-did/dummy-var/notif';
     const msg = 'La regla: Cuando la ' + notif.variableFullName + ' es ' + notif.condition + notif.value;
     client.publish(topic, msg);
-    
 }
 
 //GET ALL READED NOTIFICATIONS
@@ -355,3 +352,6 @@ function makeid(length) {
 setTimeout(() => {startMqttClient();}, 3000);
 
 module.exports = router;
+
+
+

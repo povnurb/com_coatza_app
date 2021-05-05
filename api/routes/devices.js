@@ -11,8 +11,6 @@ import AlarmRule from '../models/emqx_alarm_rule';
 import EmqxAuthRule from "../models/emqx_auth";
 
 
-
-
 /**
     ___     ____   ____
    /   |   / __ \ /  _/
@@ -20,6 +18,7 @@ import EmqxAuthRule from "../models/emqx_auth";
  / ___ | / ____/_/ /   
 /_/  |_|/_/    /___/
  */
+
 const auth = {
     auth: {
         username: 'admin',
@@ -30,7 +29,7 @@ const auth = {
 //get llega por query
 //localhost:3001/api/device para un mismo endpoint solo cambia el metodo
 //ruta para obtener los dispositivos
-router.get("/device", checkAuth, async(req,res)=>{
+router.get("/device", checkAuth, async (req,res)=>{
     try {
         const userId = req.userData._id;
 
