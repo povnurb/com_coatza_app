@@ -26,11 +26,15 @@
                             <label>Tema:</label>
                         </slot>
                         <el-select v-model="selectedIndexTemplate" placeholder="Selecciona un Tema" class="select-primary" style="width:100%"> 
-                            <el-option v-for="template, index in templates" :key="template._id" class="text-dark" :label="template.name" :value="index"></el-option>
-                            
+                        <el-option
+                             v-for="(template, index) in templates"
+                            :key="template._id" 
+                            class="text-dark" 
+                            :value="index" 
+                            :label="template.name"
+                        ></el-option>
                         </el-select>
                     </div>
-
                 </div>
 
                 <div class="row pull-right">
@@ -40,24 +44,43 @@
                 </div>
             </card>
         </div>
+
         <!-- vista de dispositivos -->
         <div class="row">
             <card>
                 <div slot="header">
                     <h4 class="card-title">Dispositivos</h4>
                 </div>
+
                 <el-table :data="$store.state.devices">
+                    <el-table-column label="#" min-width="50" align="center">
+                    <div slot-scope="{ row, $index }">
+                    {{ $index + 1 }}
+                </div>
+                </el-table-column>
+
                     <el-table-column prop="name" label="Nombre"></el-table-column>
+
                     <el-table-column prop="dId" label="Dispositivo Id"></el-table-column>
+
                     <el-table-column prop="password" label="Password"></el-table-column>
-                    <el-table-column prop="templateName" label="Tema"></el-table-column>
+
+                    <el-table-column
+                     prop="templateName" 
+                     label="Tema"
+                     ></el-table-column>
+
                     <el-table-column label="Acciones">
-
-                        <div slot-scope="{row}">
-
-                            [<el-tooltip content="DB" :open-delay="3000">
-                                <i class="fas fa-database" style="font-size: 20px" :class="{'text-success' : row.saverRule.status,'text-dark':!row.saverRule.status}"></i>
-                            </el-tooltip>]
+                        <div slot-scope="{row, $index }">
+                            <el-tooltip content="DB" :open-delay="3000">
+                                <i 
+                                class="fas fa-database " style="font-size: 20px" 
+                                :class="{
+                                    'text-success': row.saverRule.status, //este es el proble parece que cuando se graban no se salvan
+                                    'text-dark': !row.saverRule.status
+                                    }"
+                                ></i>
+                            </el-tooltip>
                             
                             <el-tooltip content="Salvar en Base de Datos" :open-delay="2500" placement="top" style="margin-left:10px">
                                 <base-switch 
@@ -74,13 +97,9 @@
                                     <i class="tim-icons icon-simple-remove "></i>
                                 </base-button>
                             </el-tooltip>
-
                         </div>
-                        
-                        
                     </el-table-column>
                 </el-table>
-                
             </card>
         </div>
         <!-- <Json :value="$store.state.selectedDevice.userId"></Json> -->
@@ -93,18 +112,17 @@ import { Table, TableColumn } from 'element-ui';
 import { Select, Option } from 'element-ui';
 import BaseSwitch from '../components/BaseSwitch.vue';
 
-
-export default{
-    middleware:"authenticated",
-    components:{
+export default {
+    middleware: "authenticated",
+    components: {
         BaseSwitch,
         [Table.name]: Table,
         [TableColumn.name]: TableColumn,
         [Option.name]: Option,
         [Select.name]: Select
     },
-    data(){
-        return{
+    data() {
+        return {
            templates: [],
            selectedIndexTemplate:null,
            newDevice:{
@@ -112,34 +130,33 @@ export default{
                dId: "",
                templateId: "",
                templateName: ""
-           },
+           }
         };
     },
-    mounted(){
+    mounted() {
         //this.$store.dispatch("getDevices"); //si hay algun error lo podemos quitar
         this.getTemplates();
+        console.log("montado"); //solo para ver si se esta actualizando
     },
     methods: {
-        //row.saverRule
-        updateSaverRuleStatus(rule){
-            //console.log("entro la funcion")
+        updateSaverRuleStatus(rule) {
+            console.log("entro la funcion")
             var ruleCopy = JSON.parse(JSON.stringify(rule));
 
             ruleCopy.status = !ruleCopy.status;
             //console.log("se hace la inversion");
             const toSend = { rule: ruleCopy };
-
             const axiosHeaders = {
-                headers:{
+                headers: {
                     token: this.$store.state.auth.token //accessToken o token?
                 }
             };
-            //console.log("se manda axios")
+            console.log("se manda axios")
             this.$axios
                 .put("/saver-rule", toSend, axiosHeaders)
                 .then(res=>{
-                    //console.log(res.data.status);
-                    //console.log("respondio axios!!!!!!")
+                    console.log(res.data.status);
+                    console.log("respondio axios!!!!!!")
                     if (res.data.status == "Exito"){
                         //console.log("exito deberia jalar");
                         this.$store.dispatch("getDevices");
@@ -149,6 +166,7 @@ export default{
                             icon:"tim-icons icon-check-2",
                             message: " Dispositivo actualizado"
                         });
+                        
                     }
                     return;
                 })
@@ -166,7 +184,7 @@ export default{
 
         deleteDevice(device){
             if(confirm("¿Deseas borrar el dispositivo " + device.name + "? Esta acción no se puede deshacer")){
-                const axiosHeader ={
+                const axiosHeaders ={
                     headers:{
                         token: this.$store.state.auth.token
                     },
@@ -174,10 +192,11 @@ export default{
                         dId:device.dId
                     }
                 };
+
                 this.$axios
-                    .delete("/device", axiosHeader)
+                    .delete("/device", axiosHeaders)
                     .then(res => {
-                        if(res.data.status == "Exito"){
+                        if(res.data.status == "Exito"){ //tenia Exito
                             this.$notify({
                                 type:"success",
                                 icon:"tim-icons icon-check-2",
@@ -185,14 +204,19 @@ export default{
                             });
                             this.$store.dispatch("getDevices");
                         }
+
+                        $nuxt.$emit("time-to-get-devices");
+
+                        return;
                     })
-                .catch(e=>{
+                .catch(e => {
                     console.log(e);
                     this.$notify({
-                        type:"danger",
+                        type: "danger",
                         icon: "tim-icons icon-alert-circle-exc",
-                        message:"Error al borrar el dispositivo "+device.name
+                        message: " Error al borrar el dispositivo "+device.name
                     });
+                    return;
                 });
             };
         },
@@ -222,6 +246,7 @@ export default{
                 });
                 return;
             }
+
             const axiosHeaders = {
                 headers:{
                     token: this.$store.state.auth.token
@@ -234,14 +259,13 @@ export default{
 
             const toSend = {
                 newDevice: this.newDevice
-            }
+            };
 
             this.$axios
                 .post("/device", toSend, axiosHeaders)
                 .then(res => {
                     //console.log(res.data.status);
                     if(res.data.status == "Exito"){ //probar con success no jalo, jala con Exito
-
                         this.$store.dispatch("getDevices");
 
                         this.newDevice.name = "";
@@ -259,7 +283,7 @@ export default{
                 })
                 .catch(e => {
                     if (
-                        e.response.data.status == "Error" && 
+                        e.response.data.status == "error" && 
                         e.response.data.error.errors.dId.kind == "unique"
                         ){
                         this.$notify({
@@ -279,6 +303,7 @@ export default{
                     }
                 });
         },
+
         //Get templates
         async getTemplates(){
             const axiosHeaders = {
@@ -289,9 +314,9 @@ export default{
 
         try {
             const res = await this.$axios.get("/template", axiosHeaders);
-            //console.log(res.data);
+            console.log(res.data);
 
-            if(res.data.status == "success"){
+            if (res.data.status == "success") {
             this.templates = res.data.data;
             }
         } catch (error) {
@@ -303,9 +328,7 @@ export default{
             console.log(error);
             return;
         }
-        },
-        
-        
+        },          
     }
 };
 </script>
