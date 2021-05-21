@@ -27,7 +27,7 @@ async function listResources() {
 
 try {
     const url = "http://"+process.env.EMQX_NODE_HOST+":8085/api/v4/resources/";
-
+    console.log(url);
     const res = await axios.get(url, auth);
 
     const size = res.data.data.length;
@@ -75,6 +75,7 @@ try {
     }
 } catch (error) {
     console.log("Error listing emqx recursos");
+    console.log(url);
     console.log(error);
 }
 
@@ -158,8 +159,8 @@ global.check_mqtt_superuser = async function checkMqttSuperUser(){
                     publish: ["#"],
                     subscribe: ["#"],
                     userId: "LALOSANCHEZCORONA",
-                    username: "superuser",
-                    password: "superuser",
+                    username: process.env.EMQX_NODE_SUPERUSER_USER,
+                    password: process.env.EMQX_NODE_SUPERUSER_PASSWORD,
                     type: "superuser",
                     time: Date.now(),
                     updatedTime: Date.now()
@@ -178,6 +179,7 @@ global.check_mqtt_superuser = async function checkMqttSuperUser(){
 
 
 setTimeout(() => {
+    console.log("listando recursos!!!")
     listResources();
 }, process.env.EMQX_RESOURCES_DELAY);
 

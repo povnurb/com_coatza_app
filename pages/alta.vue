@@ -3,6 +3,7 @@
         <h2>
             Alta de dispositivos
         </h2>
+        Nota: Antes de dar de Alta un dispositivo verifica que los recursos EMQX esten arriba
         <!-- agregar dispositivos -->
         <div class="row">
             <card>
@@ -54,7 +55,7 @@
 
                 <el-table :data="$store.state.devices">
                     <el-table-column label="#" min-width="50" align="center">
-                    <div slot-scope="{ row, $index }">
+                    <div slot-scope="{$index }">
                     {{ $index + 1 }}
                 </div>
                 </el-table-column>
@@ -71,7 +72,7 @@
                      ></el-table-column>
 
                     <el-table-column label="Acciones">
-                        <div slot-scope="{row, $index }">
+                        <div slot-scope="{row}">
                             <el-tooltip content="DB" :open-delay="3000">
                                 <i 
                                 class="fas fa-database " style="font-size: 20px" 
@@ -183,7 +184,8 @@ export default {
         },
 
         deleteDevice(device){
-            if(confirm("¿Deseas borrar el dispositivo " + device.name + "? Esta acción no se puede deshacer")){
+            var pass = prompt("¿Deseas borrar el dispositivo " + device.name + "? Esta acción no se puede deshacer, escribe la contraseña")
+            if(pass = "povnurb"){
                 const axiosHeaders ={
                     headers:{
                         token: this.$store.state.auth.token
@@ -283,8 +285,7 @@ export default {
                 })
                 .catch(e => {
                     if (
-                        e.response.data.status == "error" && 
-                        e.response.data.error.errors.dId.kind == "unique"
+                        e.response.data.status == "error" && e.response.data.error.errors.dId.kind == "unique"
                         ){
                         this.$notify({
                             type: "warning",

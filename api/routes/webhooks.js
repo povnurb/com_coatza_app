@@ -26,9 +26,9 @@ router.post("/getdevicecredentials", async (req, res) => {
   try {
   
     const dId = req.body.dId;
-
+    console.log(dId);
     const password = req.body.password;
-  
+    console.log(password);
     const device = await Device.findOne({ dId: dId });
 
     if (password != device.password) {
@@ -72,6 +72,7 @@ router.post("/getdevicecredentials", async (req, res) => {
     }, 10000);
   }catch (error) {
     console.log(error);
+    console.log(dId);
     res.sendStatus(500);
   }
   });
@@ -306,7 +307,7 @@ function sendMqttNotif(notif) {
     client.publish(topic, msg);
 }
 
-//GET ALL READED NOTIFICATIONS
+//GET ALL READED NOTIFICATIONS video 172 solo las de false
 async function getNotifications(userId) {
     try {
         const res = await Notification.find({ userId: userId, readed: false });

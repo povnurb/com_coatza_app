@@ -79,7 +79,7 @@ router.get("/device", checkAuth, async (req,res)=>{
 router.post("/device", checkAuth, async (req, res) => {
     try {
         const userId = req.userData._id;
-
+        console.log(userId);
         var newDevice = req.body.newDevice;
 
         newDevice.userId = userId;

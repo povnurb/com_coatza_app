@@ -148,7 +148,19 @@ export default {
       this.selectedDevice = index;
     },
     notificationReaded(notifId){
-      
+      function confirmar() 
+     {
+        if(confirm("¿Deseas eliminar la alarma?"))
+	    {
+	   return true;
+	    }
+	    else
+	    {
+	   return false;
+	    }
+     }
+
+      if(confirmar()){
       const axiosHeaders = {
         headers: {
           token: this.$store.state.auth.token
@@ -169,6 +181,13 @@ export default {
           console.log(e);
           return;
         });
+      }
+
+
+
+
+
+
     },
     logOut(){
       console.log("logout");

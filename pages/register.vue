@@ -80,7 +80,7 @@ export default {
       this.$axios.post("/register",this.user)
       .then((res)=>{
         //exito-Usuario Creado
-        if(res.data.status == "Exito"){
+        if(res.data.status == "success"){
           this.$notify({
             type:"success",
             icon:"tim-icons icon-check-2",
@@ -102,6 +102,7 @@ export default {
             icon: "tim-icons icon-alert-circle-exc",
             message:"El correo ya esta registrado ",
           });
+          $nuxt.$router.push('/login');
           return;
         }else{
           this.$notify({

@@ -1,9 +1,9 @@
 <template>
     <div>
         <h2>
-            Historico de Alarmas
+            Alarmas
         </h2>
-        
+        Nota: Para mas detalles ve a notificaciones.
         <!-- ALARMS TABLE-->
         <div class="row" v-if="$store.state.devices.length > 0">
           <div class="col-sm-12">
