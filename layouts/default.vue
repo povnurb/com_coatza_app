@@ -38,7 +38,7 @@
 
         <sidebar-item
           :link="{
-            name: 'Historico de Alarmas',
+            name: 'Notificaciones de Alarmas',
             icon: 'tim-icons icon-bell-55',
             path: '/historico'
           }"
