@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2>
-            Reglas de Alarmas
+            DIRECTORIO
         </h2>
         <!-- Nuevo Formulario de Alarmas -->
         <div class="row">
@@ -47,7 +47,7 @@
                     </div>
                 </card>
                 <card v-else>
-                    Necesitas seleccionar un dispositivo para crear una Alarma
+                    Aun no hay registro 
 
                 </card>
             </div>
@@ -65,7 +65,7 @@
                 :data="$store.state.selectedDevice.alarmRules">
 
                 <el-table-column min-width="50" label="#" align="center">
-                  <div class="photo" slot-scope="{row, $index}">
+                  <div class="photo" slot-scope="{$index}">
                     {{$index + 1}}
                   </div>
                 </el-table-column>
@@ -77,7 +77,7 @@
                 <el-table-column prop="counter" label="Disparos"></el-table-column>
 
                 <el-table-column header-align="right" align="right" label="Acciones">
-                  <div slot-scope="{row, $index}" class="text-right table-actions">
+                  <div slot-scope="{row}" class="text-right table-actions">
 
                     <el-tooltip content="Delete" effect="ligth" placement="top">
                       <base-button @click="deleteDevice(row)" type="danger" icon size="sm" class="btn-link">
@@ -140,8 +140,7 @@ export default {
   methods: {
 
     deleteDevice(rule) {
-      var pass = prompt("¿Deseas borrar la regla? Esta acción no se puede deshacer, verifica y escribe la contraseña");
-      if(pass == "povnurb"){
+
       const axiosHeaders = {
         headers: {
           token: this.$store.state.auth.token
@@ -173,7 +172,6 @@ export default {
           console.log(e);
           return;
         });
-      }
     },
 
     updateStatusRule(rule) {

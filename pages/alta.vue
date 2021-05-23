@@ -185,7 +185,7 @@ export default {
 
         deleteDevice(device){
             var pass = prompt("¿Deseas borrar el dispositivo " + device.name + "? Esta acción no se puede deshacer, escribe la contraseña")
-            if(pass = "povnurb"){
+            if(pass == "povnurb"){
                 const axiosHeaders ={
                     headers:{
                         token: this.$store.state.auth.token

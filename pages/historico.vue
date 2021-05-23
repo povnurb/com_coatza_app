@@ -3,7 +3,7 @@
         <h2>
             Alarmas
         </h2>
-        Nota: Para mas detalles ve a notificaciones.
+        Nota: Para mas detalles ir a notificaciones.
         <!-- ALARMS TABLE-->
         <div class="row" v-if="$store.state.devices.length > 0">
           <div class="col-sm-12">
